@@ -26,11 +26,11 @@ public class WebController {
 	@RequestMapping("/")
 	public ModelAndView home() {
 		// init data
-		todoRepository.save(new TodoMngrIO("笼救老", ""));
-		todoRepository.save(new TodoMngrIO("弧贰", "@1"));
-		todoRepository.save(new TodoMngrIO("没家", "@1"));
-		todoRepository.save(new TodoMngrIO("规没家", "@1 @3"));
-		todoRepository.save(new TodoMngrIO("氓沥府", "@2"));
+		todoRepository.save(new TodoMngrIO("job1", ""));
+		todoRepository.save(new TodoMngrIO("job2", "@1"));
+		todoRepository.save(new TodoMngrIO("job3", "@1"));
+		todoRepository.save(new TodoMngrIO("job4", "@1 @3"));
+		todoRepository.save(new TodoMngrIO("job5", "@2"));
 		
 		// setting index.html
 		ModelAndView modelAndView = new ModelAndView();
