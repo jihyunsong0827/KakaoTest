@@ -1,0 +1,13 @@
+@charset "EUC-KR";
+
+.bootstrap-select ul.dropdown-menu li:first-child {
+    display: none;
+}
+
+.prev-next-current-center {
+	text-align: center;
+}
+
+.chosen-container {
+	width: 300px !important;
+}

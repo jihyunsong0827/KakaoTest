@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>kakao todo song</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	
+	<!-- for select search -->
+	<!-- https://harvesthq.github.io/chosen/ -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+	
+	<script src="/js/Todo.controller.js"></script>
+	<script src="/js/Todo.directive.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/todo.css">
+</head>
+<body ng-controller="ToDoCtrl">
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">KAKAOPAY TODO PROJECT</a>
+		    </div>
+		    <a href="https://github.com/"><button class="btn btn-success navbar-btn">GitHub</button></a>
+  		</div>
+  	</nav>
+	<div class="container">
+		<div class="col-md-1"></div>
+		<div class="col-md-12">
+			<div class="panel-group">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						<h3>INSERT TODO</h3>
+					</div>
+					<div class="panel-body">
+						<form class="form-horizontal" role="form" method="post"
+							action="index.php">
+							<div class="form-group">
+								<label for="jobName" class="col-sm-2 control-label">할일</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="jobName" name="jobName"
+										placeholder="할일" ng-model="jobName" style="width:500px">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="refJobId" class="col-sm-2 control-label">다른 할일 참조</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" id="refJobId"
+										name="refJobId" placeholder="다른 할일 참조" ng-model="refJobId" readonly style="width:500px"><br/>
+									<button type="button" stype ="height:40px" class="btn btn-primary mb-2" ng-click="getTodoListForSelect()">할일 목록 가져오기</button>
+									<select class="chosen" style="width:350px;height:50px;!important" ng-model="selectRefJobId" ng-change="updateRefJobId()">
+									</select>
+								</div>
+							</div>
+    						<div class="text-center">
+								<button type="button" class="btn btn-primary mb-2" ng-click="registerTodo()">등록</button>
+								<button type="button" class="btn btn-warning mb-2" ng-click="initTodo()">초기화</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+	<div class="container">
+		<div class="col-md-1"></div>
+		<div class="col-md-12">
+			<div class="panel-group">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<div class="container">
+							<div class="form-group">
+								<div class="col-xs-6">
+									<h3>TODO TABLE</h3>
+								</div>
+								<div class="col-xs-2" style="margin-top: 15px; margin-bottom: 10px;">
+									<select class="form-control" ng-model="selectSize"
+										ng-change="initPageNumber()">
+										<option value="5" selected="selected">5</option>
+										<option value="10">10</option>
+										<option value="15">15</option>
+										<option value="20">20</option>
+									</select>
+								</div>
+								<div class="col-xs-2" style="margin-top: 15px; margin-bottom: 10px;">
+									<button type='button' class='btn btn-primary'
+												ng-click="getTodoListForPage(0)">다시 조회</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">할일</th>
+									<th scope="col">작성일시</th>
+									<th scope="col">최종수정일시</th>
+									<th scope="col">작업완료(Y/N)</th>
+									<th scope="col">완료처리</th>
+									<th scope="col">수정하기</th>
+								</tr>
+							</thead>
+							<tbody >
+								<tr class="todoTable" ng-repeat="todo in todoList">
+									<td scope="row">{{todo.jobId}}</td>
+									<td id="jobName-{{todo.jobId}}">{{todo.jobName}} {{todo.refJobId}}</td>
+									<td>{{todo.frstRegTimeStamp}}</td>
+									<td id="time-{{todo.jobId}}">{{todo.lastChngTimeStamp}}</td>
+									<td id="complete-{{todo.jobId}}">{{todo.completeYN == 1 ? "Y" : "N"}}</td>
+									<td><button type="button" class="btn btn-success mb-2"
+											ng-click="completeTodo(todo.jobId)">완료</button></td>
+									<td>
+										<!-- Button trigger modal -->
+										<button type="button" class="btn btn-primary" data-toggle="modal"
+											data-target="#modifyTodo" ng-click="getTodo(todo.jobId)">수정</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="text-center">
+							<button type="button" id="prev-button" class="btn btn-lg btn-info" disabled
+								ng-click="getTodoListForPage(-1)">Prev</button>
+							<input type="hidden" ng-init="currentPage=0;"
+								ng-value="currentPage" />
+							<button type="button" class="btn btn-lg btn-info" disabled>{{currentPage + 1}}</button>
+							<button type="button" id="next-button" class="btn btn-lg btn-info" disabled
+								ng-click="getTodoListForPage(1)">Next</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modifyTodo" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">MODIFY TODO</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form class="form-horizontal" role="form" method="post" action="index.php">
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="jobName" class="col-sm-2 control-label">ID</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="modifyJopId"
+									name="modifyJopId" placeholder="할일" ng-model="modifyJopId" readonly/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="jobName" class="col-sm-2 control-label">할일</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="modifyJobName"
+									name="modifyJobName" placeholder="할일" ng-model="modifyJobName"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="refJobId" class="col-sm-2 control-label">다른
+								할일 참조</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="modifyRefJobId"
+									name="modifyRefJobId" placeholder="다른 할일 참조" ng-model="modifyRefJobId"
+									readonly><br />
+								<button type="button" stype="height:40px"
+									class="btn btn-primary mb-2" ng-click="getTodoListForSelectModify()">할일
+									목록 가져오기</button>
+								<select class="chosen-modify" ng-model="selectModifyRefJobId" ng-change="updateModifyRefJobId()">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning mb-2" ng-click="initModifyTodo()">초기화</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-primary" ng-click="modifyTodo()">수정</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="close" data-dismiss="alert"
+		aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	<script>
+		$(document).ready(function() {
+			$('.chosen').chosen();
+		});
+	</script>
+</body>
+</html>	
