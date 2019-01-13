@@ -188,6 +188,11 @@ app.controller('ToDoCtrl', ['$scope','TodoService', function ($scope, TodoServic
 	// 수정 화면 참조하는 JOB 추가
 	$scope.updateModifyRefJobId = function () {
 		var tempJobId = $scope.modifyRefJobId;
+		if ($scope.selectModifyRefJobId == $scope.modifyJopId) {
+			alert("자기 자신은 참조할 수 없습니다. (" + $scope.selectModifyRefJobId + ")");
+			return;
+		}
+		
 		if (tempJobId != undefined && tempJobId != null) {
 			var jobSplit = tempJobId.split(" ");
 			

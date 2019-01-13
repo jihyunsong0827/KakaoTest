@@ -41,12 +41,6 @@ public interface TodoListMngr{
 	 * @return 
 	 */
 	public TodoMngrIO getTodo(Long jobId);
-	
-	/**
-	 * 且老 昏力贸府
-	 * @param todoList
-	 */
-	public void deleteTodo(List<TodoMngrIO> todoDeleteList);
 
 	/**
 	 * 肯丰 贸府
