@@ -151,7 +151,7 @@ public class TodoListMngrImpl implements TodoListMngr {
 			if (null != refJobId && refJobId.length() > 0) {
 				String[] redJobIdArr = refJobId.split(" ");
 				for (int i = 0; i < redJobIdArr.length; i++) {
-					System.out.println(redJobIdArr[i].length()) ;
+
 					if (null != redJobIdArr[i] && redJobIdArr[i].length() > 0) {
 						String tempRefJobId = redJobIdArr[i].substring(1);
 						TodoMngrIO refTodoMngrIO = null;
@@ -184,12 +184,9 @@ public class TodoListMngrImpl implements TodoListMngr {
 		}
 		
 		Optional<TodoMngrIO> todoMngrIOOptional = toDoRepository.findById(jobId);
-		TodoMngrIO todoMngrIO = null;
-		System.out.println(todoMngrIO);
+		
 		if (!todoMngrIOOptional.isPresent()) {
 			throw new SendMessageErrorException(jobId, "Result doesn't exist");
-		} else {
-			todoMngrIO = todoMngrIOOptional.get();
 		}
 		
 		return todoMngrIOOptional.get();
