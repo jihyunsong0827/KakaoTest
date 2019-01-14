@@ -12,10 +12,6 @@ import java.time.LocalDate;
 
 public class TodoUtils{
 
-	/**
-	 * 현재시간을 조회
-	 * @return
-	 */
 	public String getCurrentTimeStamp() {
 		LocalDate currentDate = LocalDate.now();
 		return currentDate.toString();
